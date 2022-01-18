@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-size: 13px;
+}
+
+body {
+  @apply antialiased;
+  @apply text-slate-600;
+  @apply text-base;
+}
