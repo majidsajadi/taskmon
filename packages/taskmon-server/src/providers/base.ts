@@ -26,7 +26,8 @@ export interface Provider<Queue = unknown, Job = any, JobsOptions = any> {
   getQueueJobCounts(name: string): Promise<Record<string, number>>;
   isQueuePause(name: string): Promise<boolean>;
   getQueuesInfo(): Promise<QueueInfo[]>;
-  destroyQueue(queue: string): Promise<void>;
+  pauseQueue(name: string): Promise<void>;
+  destroyQueue(name: string): Promise<void>;
   addJob(queueName: string, jobName: string, data: any, options: JobsOptions): Promise<void>
   getJobs(queueName: string, type: string, option: GetJobOption): Promise<Job[]>;
   getJob(queueName: string, jobId: string): Promise<Job>;

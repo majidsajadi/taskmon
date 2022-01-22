@@ -58,6 +58,23 @@ export const removeJob = async (
   }
 };
 
+export const retryJob = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const provider = req.app.locals.provider;
+    const { queue, jobId } = req.params;
+    await provider.retryJob(queue, jobId);
+
+    res.status(HttpStatusCode.OK).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+
 export const promoteJob = async (
   req: Request,
   res: Response,

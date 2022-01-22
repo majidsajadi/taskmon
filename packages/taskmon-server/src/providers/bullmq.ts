@@ -105,7 +105,22 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
       })
     );
   }
+  
+  /**
+   * Pause/resume queue
+   * @param name queue name
+   */
+  async pauseQueue(name: string) {
+    const isPaused = await this.isQueuePause(name)
+    const queue = await this.getQueue(name);
 
+    if (isPaused) {
+      await queue.resume()
+    } else {
+      await queue.pause()
+    }
+  }
+    
   /**
    * Completely destroys the queue and all of its contents irreversibly
    * This method will the *pause* the queue and requires that there are no

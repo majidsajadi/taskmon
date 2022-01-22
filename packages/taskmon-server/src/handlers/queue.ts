@@ -33,3 +33,19 @@ export const destroyQueue = async (
     next(error);
   }
 };
+
+export const pauseQueue = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const provider = req.app.locals.provider;
+    const { queue } = req.params;
+    await provider.pauseQueue(queue);
+
+    res.status(HttpStatusCode.OK).send();
+  } catch (error) {
+    next(error);
+  }
+};
