@@ -37,8 +37,20 @@ export type Job = {
   parentKey?: string;
 };
 
-export type QueueListResponse = {
+export type QueueInfo = {
   name: string;
-  jobsCount: number;
+  counts: Record<string, number>;
+  paused: boolean;
 };
 
+export type QueueListResponse = {
+  queues: QueueInfo[];
+}
+
+export type WorkerListResponse = {
+  workers: Record<string, string>[]
+}
+
+export type ListJobsResponse = { 
+  jobs: Job[]
+}

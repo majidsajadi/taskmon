@@ -1,23 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 import HttpStatusCode from "../utils/http-codes";
 
-export const addJob = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const provider = req.app.locals.provider;
-    const { queue } = req.params;
-    const { name, data, options } = req.body;
-
-    await provider.addJob(queue, name, data, options);
-
-    res.status(HttpStatusCode.CREATED);
-  } catch (error) {
-    next(error);
-  }
-};
 
 export const getJobs = async (
   req: Request,
@@ -37,6 +20,24 @@ export const getJobs = async (
     res.status(HttpStatusCode.OK).send({
       jobs,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addJob = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const provider = req.app.locals.provider;
+    const { queue } = req.params;
+    const { name, data, options } = req.body;
+
+    await provider.addJob(queue, name, data, options);
+
+    res.status(HttpStatusCode.CREATED);
   } catch (error) {
     next(error);
   }

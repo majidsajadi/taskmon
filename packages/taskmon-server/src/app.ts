@@ -33,15 +33,18 @@ app.locals.provider = provider;
 
 const router = Router();
 
+// Queue routes
 router.get("/queues", queueHandler.getQueue);
 router.delete("/queues/:queue", queueHandler.destroyQueue);
 router.put("/queues/:queue/pause", queueHandler.destroyQueue);
-router.post("/queues/:queue/jobs", jobHandler.addJob);
+// Worker routes
+router.get("/queues/:queue/workers", workerHandler.getWorkers);
+// Job routes
 router.get("/queues/:queue/jobs", jobHandler.getJobs);
+router.post("/queues/:queue/jobs", jobHandler.addJob);
 router.delete("/queues/:queue/jobs/:jobId", jobHandler.removeJob);
 router.put("/queues/:queue/jobs/:jobId/promote", jobHandler.promoteJob);
 router.put("/queues/:queue/jobs/:jobId/retry", jobHandler.promoteJob);
-router.get("/queues/:queue/workers", workerHandler.getWorkers);
 
 app.use("/api/v1", router);
 

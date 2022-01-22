@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Job, QueueListResponse } from "./types";
+import { ListJobsResponse, QueueListResponse, WorkerListResponse } from "./types";
 
 enum Method {
   GET = "get",
@@ -16,13 +16,6 @@ type RequestParameters = {
   method: Method;
   query?: QueryParams;
   body?: Record<string, unknown>;
-};
-
-// fund-management response type
-type ResponseType<Data = undefined> = {
-  success: boolean;
-  data?: Data;
-  count?: number;
 };
 
 const ERROR_MESSAGE = "Unexpected Error. Please submit an issue in Github";
@@ -81,85 +74,83 @@ class Client {
   }
 
   public readonly queue = {
-    list: (): Promise<ResponseType<QueueListResponse>> => {
-      return this.request<ResponseType<QueueListResponse>>({
+    list: (): Promise<QueueListResponse> => {
+      return this.request<QueueListResponse>({
         path: `/queues`,
         method: Method.GET,
       });
     },
 
-    // get: (queueName: string): Promise<string> => {
-    //   return this.request<string>({
-    //     path: `/queue/${queueName}`,
-    //     method: Method.GET,
-    //   });
-    // },
-
-    resume: (queueName: string): Promise<ResponseType> => {
+    // Resume a paused queue. or Pause a queue.
+    pause: (queueName: string): Promise<void> => {
       return this.request({
-        path: `/queue/${queueName}/resume`,
-        method: Method.POST,
-      });
-    },
-
-    pause: (queueName: string): Promise<ResponseType> => {
-      return this.request({
-        path: `/queue/${queueName}/pause`,
-        method: Method.POST,
-      });
-    },
-
-    clean: (queueName: string): Promise<ResponseType> => {
-      return this.request({
-        path: `/queue/${queueName}/clean`,
+        path: `/queues/${queueName}/pause`,
         method: Method.PUT,
       });
     },
+
+    // Destroy a queue if there is not active jobs in the queue
+    destroy: (queueName: string): Promise<void> => {
+      return this.request({
+        path: `/queues/${queueName}`,
+        method: Method.DELETE,
+      });
+    },
   };
+
+  public readonly worker = {
+    list: (queueName: string): Promise<WorkerListResponse> => {
+      return this.request<WorkerListResponse>({
+        path: `/queues/${queueName}/workers`,
+        method: Method.GET,
+      });
+    },
+  };
+
 
   public readonly job = {
     list: (
       queueName: string,
       query?: QueryParams
-    ): Promise<ResponseType<Job[]>> => {
-      return this.request<ResponseType<Job[]>>({
-        path: `/queue/${queueName}/jobs`,
+    ): Promise<ListJobsResponse> => {
+      return this.request<ListJobsResponse>({
+        path: `/queues/${queueName}/jobs`,
         method: Method.GET,
         query: query,
       });
     },
 
-    // get: (
-    //   queueName: string,
-    //   jobId: string,
-    // ): Promise<Job> => {
-    //   return this.request<Job>({
-    //     path: `/queue/${queueName}/jobs/${jobId}`,
-    //     method: Method.GET,
-    //   });
-    // },
-
     create: (
       queueName: string,
       body: Record<string, unknown>
-    ): Promise<ResponseType> => {
+    ): Promise<void> => {
       return this.request({
-        path: `/queue/${queueName}/jobs`,
+        path: `/queues/${queueName}/jobs`,
         method: Method.POST,
         body,
       });
     },
 
-    retry: (queueName: string, jobId: string): Promise<ResponseType> => {
+    // Retry a failed job
+    retry: (queueName: string, jobId: string): Promise<void> => {
       return this.request({
-        path: `/queue/${queueName}/clean/${jobId}/retry`,
-        method: Method.POST,
+        path: `/queues/${queueName}/jobs/${jobId}/retry`,
+        method: Method.PUT,
       });
     },
 
-    delete: (queueName: string, jobId: string): Promise<ResponseType> => {
+    // Promote a delayed job to the top of the queue.
+    promote: (queueName: string, jobId: string): Promise<void> => {
       return this.request({
-        path: `/queue/${queueName}/clean/${jobId}`,
+        path: `/queues/${queueName}/jobs/${jobId}`,
+        method: Method.PUT,
+      });
+    },
+
+    // Remove a job completely from queue
+    delete: (queueName: string, jobId: string): Promise<void> => {
+      return this.request({
+        path: `/queues/${queueName}/jobs/${jobId}`,
         method: Method.DELETE,
       });
     },

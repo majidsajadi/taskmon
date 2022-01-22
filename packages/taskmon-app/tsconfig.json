@@ -3,7 +3,7 @@
     "outDir": "build",
     "noImplicitAny": true,
     "module": "esnext",
-    "target": "es6",
+    "target": "es2017", // TODO: check this. we changed it from es6 to es2017 because of Object.entries
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
