@@ -7,12 +7,28 @@ export const getQueue = async (
   next: NextFunction
 ) => {
   try {
-    const provider = req.provider
-    const queues = provider.getQueues();
+    const provider = req.app.locals.provider;
+    const queues = await provider.getQueues();
 
     res.status(HttpStatusCode.OK).send({
       queues
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const destroyQueue = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const provider = req.app.locals.provider;
+    const { queue } = req.params;
+    await provider.destroyQueue(queue);
+
+    res.status(HttpStatusCode.OK).send();
   } catch (error) {
     next(error);
   }

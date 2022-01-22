@@ -5,10 +5,10 @@ import helmet from "helmet";
 import cors from "cors";
 import { AppError } from "./types";
 import { createProvider } from "./providers";
-import HttpStatusCode from "./utils/http-codes";
 
 import * as queueHandler from "./handlers/queue";
 import * as jobHandler from "./handlers/job";
+import * as workerHandler from "./handlers/worker";
 
 const app = express();
 
@@ -20,34 +20,30 @@ app.use(helmet());
 app.use(morgan("short"));
 app.use(compression());
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  try {
-    // TODO: read connection fro env
-    const provider = createProvider("bullMQ", {
-      connection: {
-        port: 6379,
-        host: "127.0.0.1",
-        password: "auth",
-      },
-    });
-
-    req.provider = provider;
-    next();
-  } catch (error) {
-    next(
-      new AppError("Connection error", HttpStatusCode.INTERNAL_SERVER_ERROR)
-    );
-  }
+// TODO: read connection fro env
+const provider = createProvider("bullMQ", {
+  connection: {
+    port: 6379,
+    host: "127.0.0.1",
+  },
+  prefix: "bull",
 });
+
+app.locals.provider = provider;
 
 const router = Router();
 
 router.get("/queues", queueHandler.getQueue);
+router.delete("/queues/:queue", queueHandler.destroyQueue);
 router.get("/queues/:queue/jobs", jobHandler.getJobs);
+router.get("/queues/:queue/jobs/:jobId", jobHandler.removeJob);
+router.get("/queues/:queue/jobs/:jobId/promote", jobHandler.promoteJob);
+router.get("/queues/:queue/workers", workerHandler.getWorkers);
 
 app.use("/api/v1", router);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log(error)
   if (error instanceof AppError) {
     return res.status(error.statusCode || 500).json({ error: error.message });
   }
