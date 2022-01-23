@@ -8,7 +8,7 @@ export function Layout() {
       <Header />
       <div className="h-screen pt-12">
         <div className="flex h-full divide-x">
-          <div className="p-6 w-72">
+          <div className="p-3 w-72">
             <QueueList />
           </div>
           <div className="h-full p-6 overflow-auto grow">

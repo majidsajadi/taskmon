@@ -1,20 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { store } from "./store";
 import App from "./components/App";
 
 import 'tippy.js/dist/tippy.css';
 import "./assets/styles/main.css";
+import { AppProvider } from "./context/App";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
+      <AppProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </Provider>
+      </AppProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

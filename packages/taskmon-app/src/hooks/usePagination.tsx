@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 type UsePaginationReturn = {
   page: number;
@@ -10,7 +10,6 @@ type UsePaginationReturn = {
 const PAGE_SIZE = 10;
 
 export default function (totalCount = 0): UsePaginationReturn {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageParam = searchParams.get("page");
@@ -24,7 +23,6 @@ export default function (totalCount = 0): UsePaginationReturn {
       setSearchParams({
         page: String(page + 1),
       });
-      // navigate(url);
     }
   };
 
@@ -33,7 +31,6 @@ export default function (totalCount = 0): UsePaginationReturn {
       setSearchParams({
         page: String(page - 1),
       });
-      // navigate(url);
     }
   };
 

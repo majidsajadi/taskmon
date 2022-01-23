@@ -1,6 +1,6 @@
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { Button } from "../base";
-import usePagination from "../../hooks/use-pagination";
+import usePagination from "../../hooks/usePagination";
 
 export function JobListPagination() {
   const totalCount = 100;

@@ -8,7 +8,7 @@ export const getQueue = async (
 ) => {
   try {
     const provider = req.app.locals.provider;
-    const queues = await provider.getQueues();
+    const queues = await provider.getQueuesInfo();
 
     res.status(HttpStatusCode.OK).send({
       queues

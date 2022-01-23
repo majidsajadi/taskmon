@@ -23,7 +23,7 @@ const ERROR_MESSAGE = "Unexpected Error. Please submit an issue in Github";
 class Client {
   private readonly prefixUrl: string | undefined;
 
-  constructor(prefixUrl = "/api/v1") {
+  constructor(prefixUrl = "http://localhost:8000/api/v1") {
     this.prefixUrl = prefixUrl;
   }
 
@@ -157,7 +157,7 @@ class Client {
   };
 }
 
-const client = new Client("");
+const client = new Client();
 
 export { Client };
 export default client;

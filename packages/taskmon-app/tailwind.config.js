@@ -7,5 +7,7 @@ module.exports = {
       display: "var(--font-display)",
     },
   },
+  plugins: [
+  ],
 }
 
