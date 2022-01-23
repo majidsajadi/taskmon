@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import Utils from "../utils";
 
 type UsePaginationReturn = {
   page: number;
@@ -20,7 +21,9 @@ export default function (totalCount = 0): UsePaginationReturn {
 
   const next = () => {
     if (!isLastPage) {
+      const prevParams = Utils.entriesToObject(searchParams.entries());
       setSearchParams({
+        ...prevParams,
         page: String(page + 1),
       });
     }
@@ -28,7 +31,9 @@ export default function (totalCount = 0): UsePaginationReturn {
 
   const prev = () => {
     if (!isFirstPage) {
+      const prevParams = Utils.entriesToObject(searchParams.entries());
       setSearchParams({
+        ...prevParams,
         page: String(page - 1),
       });
     }
