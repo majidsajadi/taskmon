@@ -9,11 +9,16 @@ export type QueueState = {
   queues: Queue[];
   queueLoading: boolean;
   fetchQueues: () => Promise<QueueListResponse>;
-  selectQueue: (name: string) => Queue | undefined;
-}
+};
 
 export const useQueue = (): QueueState => {
-  const { data, loading: queueLoading, run } = useReq(client.queue.list);
+  const {
+    data,
+    loading: queueLoading,
+    run,
+  } = useReq(client.queue.list, {
+    initialState: { loading: true },
+  });
 
   const queues = useMemo(() => {
     if (!data) return [];
@@ -31,19 +36,11 @@ export const useQueue = (): QueueState => {
     });
   }, [data]);
 
-  const selectQueue = useCallback(
-    (name: string) => {
-      return queues.find((queue) => queue.name === name);
-    },
-    [queues]
-  );
-
   const fetchQueues = useCallback(() => run(), []);
 
   return {
     queues,
     queueLoading,
     fetchQueues,
-    selectQueue,
   };
 };

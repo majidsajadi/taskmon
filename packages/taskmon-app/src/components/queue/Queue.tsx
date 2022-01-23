@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo } from "react";
 import classNames from "classnames";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FiPause } from "react-icons/fi";
+import { FiPause, FiPlay } from "react-icons/fi";
 import { Button } from "../base";
 import { JobList } from "../job/JobList";
 import { AppContext } from "../../context/App";
@@ -11,11 +11,14 @@ export function Queue() {
   const params = useParams();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { selectQueue } = useContext(AppContext);
+  const { queues } = useContext(AppContext);
 
-  const statusList = Object.values(JobStatus)
+  const statusList = Object.values(JobStatus);
   const queueName = params.queueName;
-  const queue = selectQueue?.(queueName || "");
+  const queue = useMemo(
+    () => queues?.find((queue) => queue.name === queueName),
+    [queueName, queueName]
+  );
 
   // TODO: handle queue not found
   if (!queue) {
@@ -29,9 +32,11 @@ export function Queue() {
   );
 
   useEffect(() => {
-
+    if (!currStatus) {
+      setSearchParams({ status: JobStatus.COMPLETED });
+    }
   }, [currStatus]);
-  
+
   const getClassName = (active: boolean) =>
     classNames(
       // "pb-2 mr-8 font-medium cursor-pointer",
@@ -43,7 +48,11 @@ export function Queue() {
     <div className="flex items-center justify-between">
       <h3 className="text-2xl font-bold">{queueName}</h3>
       <div className="flex space-x-2">
-        <Button icon={<FiPause className="text-lg" />}>PAUSE</Button>
+        {queue.paused ? (
+          <Button icon={<FiPlay className="text-lg" />}>RESUME</Button>
+        ) : (
+          <Button icon={<FiPause className="text-lg" />}>PAUSE</Button>
+        )}
         <Button type="primary">NEW JOB</Button>
       </div>
     </div>

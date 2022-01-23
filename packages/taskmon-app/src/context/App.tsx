@@ -6,7 +6,7 @@ type AppContextState = QueueState;
 export const AppContext = createContext<Partial<AppContextState>>({});
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const { queues, fetchQueues, queueLoading, selectQueue } = useQueue();
+  const { queues, fetchQueues, queueLoading } = useQueue();
 
   return (
     <AppContext.Provider
@@ -14,7 +14,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         queues,
         fetchQueues,
         queueLoading,
-        selectQueue,
       }}
     >
       {children}
