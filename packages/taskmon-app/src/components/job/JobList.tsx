@@ -1,9 +1,13 @@
 import { useEffect } from "react";
+import { FiRepeat, FiTrash2 } from "react-icons/fi";
 import useReq from "use-req";
-import client from "../../client";
-import usePagination from "../../hooks/usePagination";
-import { Job } from "./Job";
 import { JobListPagination } from "./JobListPagination";
+import { JobDetail } from "./JobDetail";
+import { Button, Progress, Table, Tooltip } from "../base";
+import { Job } from "../../types";
+import client from "../../client";
+import Utils from "../../utils";
+import usePagination from "../../hooks/usePagination";
 
 type JobListProps = {
   queueName: string;
@@ -23,6 +27,62 @@ export function JobList({ status, queueName }: JobListProps) {
     immediate: false,
   });
 
+  const columns = [
+    { label: "Id", accessor: (row: Job) => row.id },
+    { label: "Name", accessor: (row: Job) => row.name },
+    {
+      label: "Progress",
+      accessor: (row: Job) => <Progress percent={row.progress} />,
+    },
+    {
+      label: "Added At",
+      accessor: (row: Job) => (
+        <Tooltip content={Utils.fromNow(row.processedOn) || ""}>
+          {Utils.formatDate(row.processedOn)}
+        </Tooltip>
+      ),
+    },
+    {
+      label: "Processed On",
+      accessor: (row: Job) => (
+        <Tooltip content={Utils.fromNow(row.processedOn) || ""}>
+          {Utils.formatDate(row.processedOn)}
+        </Tooltip>
+      ),
+    },
+    {
+      label: "Finished On",
+      accessor: (row: Job) => (
+        <Tooltip content={Utils.fromNow(row.finishedOn) || ""}>
+          {Utils.formatDate(row.finishedOn)}
+        </Tooltip>
+      ),
+    },
+    {
+      label: "Actions",
+      accessor: () => (
+        <div className="flex items-center space-x-4">
+          <Tooltip content="Delete Job">
+            <Button
+              className="align-sub"
+              type="link"
+              size="small"
+              icon={<FiTrash2 className="text-lg text-red-500" />}
+            />
+          </Tooltip>
+          <Tooltip content="Retry Job">
+            <Button
+              className="align-sub"
+              type="link"
+              size="small"
+              icon={<FiRepeat className="text-lg text-teal-600" />}
+            />
+          </Tooltip>
+        </div>
+      ),
+    },
+  ];
+
   useEffect(() => {
     if (status) {
       const query = {
@@ -34,35 +94,18 @@ export function JobList({ status, queueName }: JobListProps) {
     }
   }, [fetchJobs]);
 
-  const renderTitle = () => (
-    <div className="px-4 py-2 border-b">
-      <div className="flex items-center space-x-6 font-medium">
-        <div className="w-3" />
-        <div className="flex space-x-6 grow">
-          <div className="flex-none w-16 truncate">Id</div>
-          <div className="truncate grow">Name</div>
-          <div className="flex-none w-32 truncate">Status</div>
-          <div className="flex-none truncate w-36">Added At</div>
-          <div className="flex-none truncate w-36">Processed On</div>
-          <div className="flex-none truncate w-36">Finished On</div>
-          <div className="flex-none truncate w-44">Progress</div>
-        </div>
-        <div className="w-10" />
-      </div>
-    </div>
-  );
-
   if (loading) {
     return <div>Loading...</div>;
   }
+  
   return (
     <div className="mt-4">
-      {renderTitle()}
-      <div>
-        {data?.jobs.map((job) => (
-          <Job   job={job} status={status} />
-        ))}
-      </div>
+      <Table
+        expandedRowRender={(job: Job) => <JobDetail job={job} />}
+        rows={data?.jobs || []}
+        columns={columns}
+        rowKey="id"
+      />
       <JobListPagination />
     </div>
   );

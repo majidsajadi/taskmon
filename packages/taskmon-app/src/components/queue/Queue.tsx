@@ -37,13 +37,6 @@ export function Queue() {
     }
   }, [currStatus]);
 
-  const getClassName = (active: boolean) =>
-    classNames(
-      // "pb-2 mr-8 font-medium cursor-pointer",
-      "block w-full px-6 py-3 my-2 text-sm font-medium uppercase border-t-0 border-b-2 border-x-0 cursor-pointer",
-      active ? "border-teal-600 text-teal-600" : "border-slate-100"
-    );
-
   const renderHeader = () => (
     <div className="flex items-center justify-between">
       <h3 className="text-2xl font-bold">{queueName}</h3>
@@ -58,27 +51,39 @@ export function Queue() {
     </div>
   );
 
+  const getClassName = (active: boolean) =>
+    classNames(
+      "inline-block py-4 px-4 cursor-pointer font-medium text-center border-b-2",
+      active
+        ? "border-teal-600 text-teal-600"
+        : " border-transparent hover:border-slate-100"
+    );
+
   const renderTabs = () => (
-    <ul className="flex flex-wrap my-4 list-none border-b-0">
-      {statusList.map((status) => (
-        <li className="flex-grow text-center nav-item" key={status}>
-          <span
-            onClick={() => setSearchParams({ status })}
-            key={status}
-            className={getClassName(status === currStatus)}
-          >
-            {status}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div className="my-4 border-b border-slate-100">
+      <ul className="flex flex-wrap">
+        {statusList.map((status) => (
+          <li className="mr-2" key={status}>
+            <span
+              onClick={() => setSearchParams({ status })}
+              key={status}
+              className={getClassName(status === currStatus)}
+            >
+              {status}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 
   return (
     <div>
       {renderHeader()}
-      {renderTabs()}
-      <JobList queueName={queue.name} status={currStatus} />
+      <div className="bg-white rounded">
+        {renderTabs()}
+        <JobList queueName={queue.name} status={currStatus} />
+      </div>
     </div>
   );
 }

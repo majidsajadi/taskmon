@@ -12,7 +12,7 @@ export function JobListPagination() {
   const isLastPage = page * pageSize >= totalCount;
 
   return (
-    <div className="flex flex-row-reverse py-4">
+    <div className="flex flex-row-reverse p-4">
       <div className="flex items-center">
         <span className="mr-3">
           From{" "}
