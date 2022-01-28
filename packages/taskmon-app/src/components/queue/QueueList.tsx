@@ -49,7 +49,8 @@ export function QueueList() {
 
   return (
     <div className="flex-none">
-      <div className="flex w-full mb-4">
+      <h3 className="mb-2 font-medium tracking-wider uppercase">Queues</h3>
+      <div className="flex w-full mb-2">
         <input
           type="text"
           className="flex-1 block border rounded"

@@ -6,6 +6,7 @@ import { Button } from "../base";
 import { JobList } from "../job/JobList";
 import { AppContext } from "../../context/App";
 import { JobStatus } from "../../types";
+import { QueueInfo } from "./QueueInfo";
 
 export function Queue() {
   const params = useParams();
@@ -60,7 +61,7 @@ export function Queue() {
     );
 
   const renderTabs = () => (
-    <div className="my-4 border-b border-slate-100">
+    <div className="border-b border-slate-100">
       <ul className="flex flex-wrap">
         {statusList.map((status) => (
           <li className="mr-2" key={status}>
@@ -78,8 +79,9 @@ export function Queue() {
   );
 
   return (
-    <div>
+    <div className="flex flex-col space-y-4">
       {renderHeader()}
+      <QueueInfo />
       <div className="bg-white rounded">
         {renderTabs()}
         <JobList queueName={queue.name} status={currStatus} />

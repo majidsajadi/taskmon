@@ -1,92 +1,89 @@
-import { useState } from "react";
-import { FiMinusSquare, FiPlus, FiPlusSquare } from "react-icons/fi";
+import React from "react";
+import { FiInbox } from "react-icons/fi";
+import { useTable, Column, useExpanded, Row } from "react-table";
 
-type Column<T> = {
-  label: string;
-  accessor: (row: T) => React.ReactNode;
+type TableProps<T extends object = {}> = {
+  columns: ReadonlyArray<Column<T>>;
+  data: readonly T[];
+  renderRowSubComponent: (row: Row<T>) => React.ReactNode;
 };
 
-type Props<T> = {
-  columns: Column<T>[];
-  rows: T[];
-  loading?: boolean;
-  rowKey: string;
-  expandedRowRender?: (row: T) => React.ReactNode;
-};
-
-export function Table<T = Record<string, any>>({
+export function Table<T extends object = {}>({
   columns,
-  rows,
-  loading,
-  rowKey,
-  expandedRowRender,
-}: Props<T>) {
-  const [expanded, setExpanded] = useState(["6"]);
-
-  const handleExpand = (key: any) => {
-    if (expanded.includes(key)) {
-      setExpanded(expanded.filter((k) => k !== key));
-    } else {
-      setExpanded([...expanded, key]);
-    }
-  };
-
-  const renderTableHeader = () => (
-    <thead>
-      <tr>
-        {expandedRowRender && <th className="w-4 px-6 py-3" />}
-        {columns.map((col) => (
-          // TODO: generate id here
-          <th className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase">
-            {col.label}
-          </th>
-        ))}
-      </tr>
-    </thead>
+  data,
+  renderRowSubComponent,
+}: TableProps<T>) {
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    visibleColumns,
+  } = useTable(
+    {
+      columns,
+      data,
+    },
+    useExpanded
   );
 
-  const renderTableBody = () => (
-    <tbody className="border-b">
-      {rows.map((row) => {
-        /* @ts-ignore */
-        const isExpanded = expanded.includes(row[rowKey]);
-
-        return (
-          // TODO: generate id here
-          <>
-            <tr className="border-t">
-              {expandedRowRender && (
-                <td className="px-6 py-4 text-sm whitespace-nowrap">
-                  {isExpanded ? (
-                    /* @ts-ignore */
-                    <FiMinusSquare onClick={() => handleExpand(row[rowKey])} />
-                  ) : (
-                    /* @ts-ignore */
-                    <FiPlusSquare onClick={() => handleExpand(row[rowKey])} />
-                  )}
-                </td>
-              )}
-              {columns.map((col) => (
-                <td className="px-6 py-4 text-sm whitespace-nowrap">
-                  {col.accessor(row)}
-                </td>
-              ))}
-            </tr>
-            {expandedRowRender && isExpanded && (
-              <tr className="border-t">
-                <td colSpan={columns.length + 1}>{expandedRowRender(row)}</td>
-              </tr>
-            )}
-          </>
-        );
-      })}
-    </tbody>
-  );
-
+  if (!data.length) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full space-y-4 h-96">
+        <div className="p-8 rounded-full bg-slate-100">
+        <FiInbox className="text-6xl" />
+        </div>
+        <span className="text-lg font-medium">No Data</span>
+      </div>
+    )
+  }
+  
   return (
-    <table className="w-full min-w-full overflow-auto">
-      {renderTableHeader()}
-      {renderTableBody()}
+    <table {...getTableProps()} className="w-full min-w-full overflow-auto">
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th
+                {...column.getHeaderProps()}
+                className="px-6 py-3 text-xs font-medium tracking-wider text-left uppercase"
+              >
+                {column.render("Header")}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()} className="border-b">
+        {rows.map((row) => {
+          prepareRow(row);
+          return (
+            <React.Fragment key={row.getRowProps().key}>
+              <tr className="border-t">
+                {row.cells.map((cell) => {
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      className="px-6 py-4 text-sm whitespace-nowrap"
+                    >
+                      {cell.render("Cell")}
+                    </td>
+                  );
+                })}
+              </tr>
+              {/* @ts-expect-error */}
+              {row.isExpanded ? (
+                <tr className="border-t">
+                  <td colSpan={visibleColumns.length}>
+                    {renderRowSubComponent(row)}
+                  </td>
+                </tr>
+              ) : null}
+            </React.Fragment>
+          );
+        })}
+      </tbody>
     </table>
   );
 }
