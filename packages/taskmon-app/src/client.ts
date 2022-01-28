@@ -1,5 +1,10 @@
 import axios from "axios";
-import { ListJobsResponse, QueueListResponse, WorkerListResponse } from "./types";
+import {
+  ListJobsResponse,
+  QueueListResponse,
+  QueueResponse,
+  WorkerListResponse,
+} from "./types";
 
 enum Method {
   GET = "get",
@@ -81,6 +86,13 @@ class Client {
       });
     },
 
+    stats: (queueName: string): Promise<QueueResponse> => {
+      return this.request<QueueResponse>({
+        path: `/queues/${queueName}`,
+        method: Method.GET,
+      });
+    },
+
     // Resume a paused queue. or Pause a queue.
     pause: (queueName: string): Promise<void> => {
       return this.request({
@@ -106,7 +118,6 @@ class Client {
       });
     },
   };
-
 
   public readonly job = {
     list: (

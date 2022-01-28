@@ -1,11 +1,9 @@
 import { Outlet } from "react-router-dom";
-import { Header } from "./Header";
 import { QueueList } from "./queue/QueueList";
 
 export function Layout() {
   return (
     <div className="bg-gray-100">
-      {/* <Header /> */}
       <div className="h-screen">
         <div className="flex h-full divide-x">
           <div className="flex flex-col p-3 space-y-8 bg-white w-72">

@@ -1,8 +1,0 @@
-{
-  "name": "taskmon",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/majidsajadi/taskmon",
-  "author": "Majid Sajadi <sm.sajjadi@emofid.com>",
-  "license": "MIT"
-}

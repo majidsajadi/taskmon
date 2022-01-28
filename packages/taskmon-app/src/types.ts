@@ -39,18 +39,32 @@ export type Job = {
 
 export type QueueInfo = {
   name: string;
-  counts: Record<string, number>;
-  paused: boolean;
+  totalCount: number;
 };
 
 export type QueueListResponse = {
   queues: QueueInfo[];
-}
+};
 
 export type WorkerListResponse = {
-  workers: Record<string, string>[]
-}
+  workers: Record<string, string>[];
+};
 
-export type ListJobsResponse = { 
-  jobs: Job[]
-}
+export type ListJobsResponse = {
+  jobs: Job[];
+};
+
+export type QueueResponse = {
+  queue: {
+    name: string;
+    paused: boolean;
+    totalCount: number;
+    counts: Record<string, number>;
+
+    processtimes: {
+      min: number;
+      max: number;
+      median: number;
+    };
+  };
+};

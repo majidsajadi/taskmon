@@ -1,40 +1,21 @@
 import classNames from "classnames";
-import { matchPath, useLocation, Link, useNavigate } from "react-router-dom";
-import { ChangeEventHandler, useContext, useEffect, useMemo } from "react";
-import { AppContext } from "../../context/App";
+import { matchPath, useLocation, Link } from "react-router-dom";
 import { FiRefreshCw } from "react-icons/fi";
+import { useQueryClient } from "react-query";
 import { Button } from "../base";
-import { useState } from "react";
+import { useQueues } from "../../hooks/useQueues";
+import { useFilterQueues } from "../../hooks/useFilterQueues";
+import { QueueInfo } from "../../types";
 
 export function QueueList() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [filter, setFilter] = useState("");
-  const { queues, queueLoading, fetchQueues } = useContext(AppContext);
+  const queryClient = useQueryClient();
 
-  const filtered = useMemo(() => {
-    if (filter) {
-      return queues?.filter((queue) => queue.name.includes(filter));
-    }
-
-    return queues;
-  }, [filter, queues]);
-
-  useEffect(() => {
-    const isRoot = matchPath("/", location.pathname);
-
-    if (queues?.length && isRoot) {
-      const to = `/queues/${queues[0].name}`;
-      navigate(to);
-    }
-  }, [queues, location]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(e.target.value);
-  };
+  const { data: queues, isFetching } = useQueues();
+  const { filter, filtered, onFilter } = useFilterQueues(queues);
 
   const handleRefresh = () => {
-    fetchQueues?.();
+    queryClient.invalidateQueries("queues");
   };
 
   const getLinkCLS = (match: boolean) =>
@@ -43,7 +24,19 @@ export function QueueList() {
       match && "bg-slate-100"
     );
 
-  if (queueLoading) {
+  const renderQueueItem = (queue: QueueInfo) => {
+    const to = `/queues/${queue.name}`;
+    const match = matchPath(to, location.pathname) ?? false;
+    // TODO: generate id here
+    return (
+      <Link className={getLinkCLS(!!match)} key={queue.name} to={to}>
+        <span>{queue.name}</span>
+        <span className="text-teal-600">{queue.totalCount}</span>
+      </Link>
+    );
+  };
+
+  if (isFetching) {
     return <div>Loading</div>;
   }
 
@@ -55,21 +48,11 @@ export function QueueList() {
           type="text"
           className="flex-1 block border rounded"
           value={filter}
-          onChange={handleChange}
+          onChange={onFilter}
         />
         <Button type="link" icon={<FiRefreshCw />} onClick={handleRefresh} />
       </div>
-      {filtered?.map((queue) => {
-        const to = `/queues/${queue.name}`;
-        const match = matchPath(to, location.pathname) ?? false;
-        // TODO: generate id here
-        return (
-          <Link className={getLinkCLS(!!match)} key={queue.name} to={to}>
-            <span>{queue.name}</span>
-            <span className="text-teal-600">{queue.totalCount}</span>
-          </Link>
-        );
-      })}
+      {filtered?.map(renderQueueItem)}
     </div>
   );
 }

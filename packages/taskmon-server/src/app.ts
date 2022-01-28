@@ -34,7 +34,8 @@ app.locals.provider = provider;
 const router = Router();
 
 // Queue routes
-router.get("/queues", queueHandler.getQueue);
+router.get("/queues", queueHandler.getQueues);
+router.get("/queues/:queue", queueHandler.getQueue);
 router.delete("/queues/:queue", queueHandler.destroyQueue);
 router.put("/queues/:queue/pause", queueHandler.destroyQueue);
 // Worker routes

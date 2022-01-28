@@ -1,10 +1,21 @@
 import { RedisOptions } from "ioredis";
 
+export type QueuesInfo = {
+  name: string;
+  totalCount: number;
+}[];
+
 export type QueueInfo = {
+  paused: boolean;
   name: string;
   counts: Record<string, number>;
-  paused: boolean;
-};
+  totalCount: number; 
+  processTimes: {
+    min: number;
+    max: number;
+    median: number;
+  }
+}
 
 export type GetJobOption = {
   page: number;
@@ -25,7 +36,8 @@ export interface Provider<Queue = unknown, Job = any, JobsOptions = any> {
   initQueues(): Promise<void>;
   getQueueJobCounts(name: string): Promise<Record<string, number>>;
   isQueuePause(name: string): Promise<boolean>;
-  getQueuesInfo(): Promise<QueueInfo[]>;
+  getQueueInfo(name: string): Promise<QueueInfo>;
+  getQueuesInfo(): Promise<QueuesInfo>;
   pauseQueue(name: string): Promise<void>;
   destroyQueue(name: string): Promise<void>;
   addJob(queueName: string, jobName: string, data: any, options: JobsOptions): Promise<void>

@@ -14,7 +14,6 @@ export function ProcessTimeChart() {
     { x: "Max", y: 5456456546546 },
   ];
 
-
   return (
     <div className="p-4 bg-white rounded shadow">
       <div className="mb-4 font-bold tracking-wider uppercase">

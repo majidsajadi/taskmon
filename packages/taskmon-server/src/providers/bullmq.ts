@@ -73,6 +73,17 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
   }
 
   /**
+   * Get queue total job counts
+   * @param name queue name
+   * @returns queue total job counts
+   */
+  async getQueueTotalJobCounts(name: string) {
+    const queue = this.queues[name];
+    const states = Object.values(JobStates);
+    return queue.getJobCountByTypes(...states);
+  }
+
+  /**
    * Get queue job counts by types
    * @param name queue name
    * @returns queue job counts by type
@@ -92,35 +103,58 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
 
     return Promise.all(
       queueNames.map(async (name) => {
-        const [counts, paused] = await Promise.all([
-          this.getQueueJobCounts(name),
-          this.isQueuePause(name),
-        ]);
-
+        const totalCount = await this.getQueueTotalJobCounts(name);
         return {
           name,
-          counts,
-          paused,
+          totalCount,
         };
       })
     );
   }
-  
+
+  /**
+   * Get queue info
+   * @param name queue name
+   * @returns queue info
+   */
+  async getQueueInfo(name: string) {
+    await this.getQueue(name);
+    const [paused,totalCount,counts] = await Promise.all([
+      this.isQueuePause(name),
+      // TODO: we can get totalCount from getQueueJobCounts 
+      // this way we remove a redis lookup 
+      this.getQueueTotalJobCounts(name),
+      this.getQueueJobCounts(name)
+    ])
+
+    return {
+      name,
+      paused,
+      totalCount,
+      counts,
+      processTimes: {
+        min: 0,
+        max: 0,
+        median: 0,
+      },
+    };
+  }
+
   /**
    * Pause/resume queue
    * @param name queue name
    */
   async pauseQueue(name: string) {
-    const isPaused = await this.isQueuePause(name)
+    const isPaused = await this.isQueuePause(name);
     const queue = await this.getQueue(name);
 
     if (isPaused) {
-      await queue.resume()
+      await queue.resume();
     } else {
-      await queue.pause()
+      await queue.pause();
     }
   }
-    
+
   /**
    * Completely destroys the queue and all of its contents irreversibly
    * This method will the *pause* the queue and requires that there are no
@@ -139,7 +173,12 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
    * @param data job data
    * @param options job options
    */
-  async addJob(queueName: string, jobName: string, data: any, options: JobsOptions) {
+  async addJob(
+    queueName: string,
+    jobName: string,
+    data: any,
+    options: JobsOptions
+  ) {
     const queue = await this.getQueue(queueName);
     await queue.add(jobName, data, options);
   }
