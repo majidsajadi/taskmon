@@ -6,3 +6,5 @@ export { Table } from "./Table";
 export { Tabs } from "./Tabs";
 export { Editor } from "./Editor";
 export { Descriptions } from "./Descriptions";
+export { Card } from "./Card";
+export { Loading } from "./Loading";

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { FiPause, FiPlay } from "react-icons/fi";
 import classNames from "classnames";
-import { Button } from "../base";
+import { Button, Loading } from "../base";
 import { JobList } from "../job/JobList";
 import { JobStatus } from "../../types";
 import { QueueInfo } from "./QueueInfo";
@@ -37,13 +37,12 @@ export function Queue() {
     );
 
   if (status === "loading" || status === "idle") {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
-
   if (!queue) return <div>not found</div>;
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-bold">{queueName}</h3>
         <div className="flex space-x-2">

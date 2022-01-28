@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   XAxis,
   YAxis,
@@ -6,6 +5,7 @@ import {
   VerticalBarSeries,
   FlexibleWidthXYPlot,
 } from "react-vis";
+import { Card } from "../base";
 
 export function ProcessTimeChart() {
   const processTime = [
@@ -15,10 +15,7 @@ export function ProcessTimeChart() {
   ];
 
   return (
-    <div className="p-4 bg-white rounded shadow">
-      <div className="mb-4 font-bold tracking-wider uppercase">
-        Process time
-      </div>
+    <Card title="Process time">
       <div className="flex">
         <FlexibleWidthXYPlot xType="ordinal" height={200} margin={{ left: 48 }}>
           <HorizontalGridLines />
@@ -27,6 +24,6 @@ export function ProcessTimeChart() {
           <VerticalBarSeries barWidth={0.5} data={processTime} />
         </FlexibleWidthXYPlot>
       </div>
-    </div>
+    </Card>
   );
 }
