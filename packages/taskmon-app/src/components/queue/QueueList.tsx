@@ -18,9 +18,9 @@ export function QueueList() {
     queryClient.invalidateQueries("queues");
   };
 
-  const getLinkCLS = (match: boolean) =>
+  const getQueueItemCLS = (match: boolean) =>
     classNames(
-      "hover:bg-slate-100 w-full rounded px-4 py-2 block truncate space-x-2 flex justify-between",
+      "hover:bg-slate-100 w-full rounded px-4 py-2 block truncate flex justify-between",
       match && "bg-slate-100"
     );
 
@@ -29,21 +29,35 @@ export function QueueList() {
     const match = matchPath(to, location.pathname) ?? false;
     // TODO: generate id here
     return (
-      <Link className={getLinkCLS(!!match)} key={queue.name} to={to}>
-        <span>{queue.name}</span>
-        <span className="text-teal-600">{queue.totalCount}</span>
-      </Link>
+      <li key={queue.name}>
+        <Link to={to} className={getQueueItemCLS(!!match)}>
+          <span>{queue.name}</span>
+          <span className="p-1 text-teal-600 rounded bg-slate-50">
+            {queue.totalCount}
+          </span>
+        </Link>
+      </li>
     );
   };
 
-  if (isFetching) {
-    return <div>Loading</div>;
-  }
+  const renderQueues = () => (
+    <ul className="flex flex-col space-y-2">
+      {filtered?.map(renderQueueItem)}
+    </ul>
+  );
 
-  return (
-    <div className="flex-none">
-      <h3 className="mb-2 font-medium tracking-wider uppercase">Queues</h3>
-      <div className="flex w-full mb-2">
+  const renderSkeleton = () => (
+    <ul className="flex flex-col space-y-2 animate-pulse">
+      <li className="w-full h-8 rounded bg-slate-100"></li>
+      <li className="w-full h-8 rounded bg-slate-100"></li>
+      <li className="w-full h-8 rounded bg-slate-100"></li>
+      <li className="w-full h-8 rounded bg-slate-100"></li>
+    </ul>
+  );
+
+  const renderFilter = () => (
+    <div className="w-full mb-2">
+      <div className="flex">
         <input
           type="text"
           className="flex-1 block border rounded"
@@ -52,7 +66,14 @@ export function QueueList() {
         />
         <Button type="link" icon={<FiRefreshCw />} onClick={handleRefresh} />
       </div>
-      {filtered?.map(renderQueueItem)}
+    </div>
+  );
+
+  // TODO: overflow
+  return (
+    <div>
+      {renderFilter()}
+      {isFetching ? renderSkeleton() : renderQueues()}
     </div>
   );
 }

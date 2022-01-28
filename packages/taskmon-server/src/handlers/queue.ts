@@ -9,19 +9,7 @@ export const getQueues = async (
 ) => {
   try {
     const provider = req.app.locals.provider as Provider;
-    let queues = await provider.getQueuesInfo();
-
-    queues = queues.map((queue) => {
-      const totalCount = Object.values(queue.counts).reduce(
-        (prev, curr) => prev + curr,
-        0
-      );
-
-      return {
-        ...queue,
-        totalCount,
-      };
-    });
+    const queues = await provider.getQueuesInfo();
 
     res.status(HttpStatusCode.OK).send({
       queues

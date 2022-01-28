@@ -5,7 +5,7 @@ import {
   FiRepeat,
   FiTrash2,
 } from "react-icons/fi";
-import useReq from "use-req";
+// import useReq from "use-req";
 import { JobListPagination } from "./JobListPagination";
 import { Button, Progress, Table, Tooltip } from "../base";
 import { Job } from "../../types";
@@ -23,14 +23,14 @@ type JobListProps = {
 export function JobList({ status, queueName }: JobListProps) {
   const { page, pageSize } = usePagination();
 
-  const {
-    run: fetchJobs,
-    loading,
-    data,
-  } = useReq(client.job.list, {
-    deps: [queueName, status, page, pageSize],
-    immediate: false,
-  });
+  // const {
+  //   run: fetchJobs,
+  //   loading,
+  //   data,
+  // } = useReq(client.job.list, {
+  //   deps: [queueName, status, page, pageSize],
+  //   immediate: false,
+  // });
 
   const columns = useMemo(
     () => [
@@ -104,27 +104,27 @@ export function JobList({ status, queueName }: JobListProps) {
     []
   );
 
-  const rows = useMemo(() => data?.jobs || [], [data]);
+  // const rows = useMemo(() => data?.jobs || [], [data]);
 
-  useEffect(() => {
-    if (status) {
-      const query = {
-        page,
-        pageSize,
-        type: status,
-      };
-      fetchJobs(queueName, query);
-    }
-  }, [fetchJobs]);
+  // useEffect(() => {
+  //   if (status) {
+  //     const query = {
+  //       page,
+  //       pageSize,
+  //       type: status,
+  //     };
+  //     fetchJobs(queueName, query);
+  //   }
+  // }, [fetchJobs]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <div className="mt-4">
       <Table<Job>
-        data={rows}
+        data={[]}
         columns={columns}
         renderRowSubComponent={(row) => <JobDetail job={row.original} />}
       />
