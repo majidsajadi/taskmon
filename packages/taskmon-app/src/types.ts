@@ -3,7 +3,7 @@ export enum JobStatus {
   FAILED = "failed",
   DELAYED = "delayed",
   ACTIVE = "active",
-  WAIT = "wait",
+  WAITING = "waiting",
   PAUSED = "paused",
   // REPEAT = "repeat",
 }
@@ -42,6 +42,18 @@ export type QueueInfo = {
   totalCount: number;
 };
 
+export type ProcessTimes = {
+  min: number;
+  max: number;
+  avg: number;
+};
+
+export type QueueDetail = QueueInfo & {
+  paused: boolean;
+  counts: Record<string, number>;
+  processTimes: ProcessTimes;
+};
+
 export type QueueListResponse = {
   queues: QueueInfo[];
 };
@@ -55,16 +67,5 @@ export type ListJobsResponse = {
 };
 
 export type QueueResponse = {
-  queue: {
-    name: string;
-    paused: boolean;
-    totalCount: number;
-    counts: Record<string, number>;
-
-    processtimes: {
-      min: number;
-      max: number;
-      median: number;
-    };
-  };
+  queue: QueueDetail;
 };

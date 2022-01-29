@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   XAxis,
   YAxis,
@@ -5,14 +6,20 @@ import {
   VerticalBarSeries,
   FlexibleWidthXYPlot,
 } from "react-vis";
+import { ProcessTimes } from "../../types";
+import Utils from "../../utils";
 import { Card } from "../base";
 
-export function ProcessTimeChart() {
-  const processTime = [
-    { x: "Min", y: 5 },
-    { x: "Median", y: 10 },
-    { x: "Max", y: 5456456546546 },
-  ];
+type ProcessTimeChartProps = {
+  processTimes: ProcessTimes;
+};
+
+export function ProcessTimeChart({ processTimes }: ProcessTimeChartProps) {
+  const data = useMemo(() => {
+    return Object.entries(processTimes).map(([key, value]) => {
+      return { x: Utils.capitalize(key), y: value };
+    });
+  }, [processTimes]);
 
   return (
     <Card title="Process time">
@@ -21,7 +28,7 @@ export function ProcessTimeChart() {
           <HorizontalGridLines />
           <XAxis />
           <YAxis tickSize={0} tickFormat={(x) => x} />
-          <VerticalBarSeries barWidth={0.5} data={processTime} />
+          <VerticalBarSeries barWidth={0.5} data={data} />
         </FlexibleWidthXYPlot>
       </div>
     </Card>

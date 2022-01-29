@@ -1,16 +1,32 @@
+import { useMemo } from "react";
 import { DiscreteColorLegend, RadialChart } from "react-vis";
 import { Card } from "../base";
 
-export function JobStatesChart() {
-  const myData = [{ angle: 1 }, { angle: 5 }, { angle: 2 }];
+type JobStatesChartProps = {
+  counts?: Record<string, number>;
+};
+
+export function JobStatesChart({ counts }: JobStatesChartProps) {
+  const data = useMemo(() => {
+    return counts
+      ? Object.entries(counts).map(([key, value]) => ({
+          angle: value,
+          label: key,
+        }))
+      : [];
+  }, [counts]);
+
+  const legends = useMemo(() => {
+    return data.map((item) => item.label);
+  }, [data]);
 
   return (
     <Card title="States">
       <div className="flex">
         <div className="flex-1">
-          <RadialChart data={myData} width={200} height={200} />
+          <RadialChart data={data} width={200} height={200} />
         </div>
-        <DiscreteColorLegend items={["Majid", "sajadi"]} />
+        <DiscreteColorLegend items={legends} />
       </div>
     </Card>
   );

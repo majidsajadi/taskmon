@@ -5,16 +5,18 @@ export type QueuesInfo = {
   totalCount: number;
 }[];
 
+type ProcessTimes = {
+  min: number;
+  max: number;
+  avg: number;
+}
+
 export type QueueInfo = {
   paused: boolean;
   name: string;
   counts: Record<string, number>;
   totalCount: number; 
-  processTimes: {
-    min: number;
-    max: number;
-    median: number;
-  }
+  processTimes: ProcessTimes;
 }
 
 export type GetJobOption = {
@@ -36,6 +38,7 @@ export interface Provider<Queue = unknown, Job = any, JobsOptions = any> {
   initQueues(): Promise<void>;
   getQueueJobCounts(name: string): Promise<Record<string, number>>;
   isQueuePause(name: string): Promise<boolean>;
+  getQueueProcessTimes(name: string): Promise<ProcessTimes>;
   getQueueInfo(name: string): Promise<QueueInfo>;
   getQueuesInfo(): Promise<QueuesInfo>;
   pauseQueue(name: string): Promise<void>;

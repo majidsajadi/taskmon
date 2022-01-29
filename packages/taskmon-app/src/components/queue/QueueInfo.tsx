@@ -1,8 +1,14 @@
+import { useQueue } from "../../hooks/useQueue";
+import { QueueDetail, QueueInfo } from "../../types";
 import { Card, Descriptions } from "../base";
 import { JobStatesChart } from "./JobStatesChart";
 import { ProcessTimeChart } from "./ProcessTimeChart";
 
-export function QueueInfo() {
+type QueueInfoProps = {
+  queue: QueueDetail;
+};
+
+export function QueueInfo({ queue }: QueueInfoProps) {
   return (
     <div className="flex space-x-4">
       <div className="flex-1">
@@ -22,10 +28,10 @@ export function QueueInfo() {
         </Card>
       </div>
       <div className="flex-1">
-        <JobStatesChart />
+        <JobStatesChart counts={queue.counts} />
       </div>
       <div className="flex-none w-2/5">
-        <ProcessTimeChart />
+        <ProcessTimeChart processTimes={queue.processTimes} />
       </div>
     </div>
   );

@@ -43,4 +43,9 @@ export default class Utils {
   static formatCode(code: object): string {
     return JSON.stringify(code, null, 2);
   }
+
+  static capitalize(str: string): string {
+    const arr = [...str];
+    return arr[0].toUpperCase() + arr.slice(1).join("").toLowerCase();
+  }
 }

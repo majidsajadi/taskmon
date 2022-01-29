@@ -2,11 +2,14 @@ import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { Button } from "../base";
 import usePagination from "../../hooks/usePagination";
 
-export function JobListPagination() {
-  const totalCount = 100;
+type JobListPaginationProps = {
+  totalCount?: number;
+};
+
+export function JobListPagination({ totalCount = 0 }: JobListPaginationProps) {
   const { page, pageSize, next, prev } = usePagination(totalCount);
 
-  const from = page * pageSize - 9;
+  const from = totalCount > 0 ? (page * pageSize) - pageSize : 0;
   const to = page * pageSize > totalCount ? totalCount : page * pageSize;
   const isFirstPage = page <= 1;
   const isLastPage = page * pageSize >= totalCount;
@@ -19,8 +22,7 @@ export function JobListPagination() {
           <span className="font-semibold">
             {from} to {to}
           </span>{" "}
-          of total{" "}
-          <span className="font-semibold">{totalCount}</span>
+          of total <span className="font-semibold">{totalCount}</span>
         </span>
         <Button
           onClick={prev}

@@ -60,7 +60,7 @@ export function QueueList() {
       <div className="flex">
         <input
           type="text"
-          className="flex-1 block border rounded"
+          className="flex-1 block border rounded px-2"
           value={filter}
           onChange={onFilter}
         />

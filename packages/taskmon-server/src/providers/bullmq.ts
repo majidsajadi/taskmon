@@ -94,6 +94,41 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
   }
 
   /**
+   * Get Time spent in the workers
+   * @param name queue name
+   * @returns process times of queue jobs
+   */
+  async getQueueProcessTimes(name: string) {
+    const queue = await this.getQueue(name);
+    const jobs = await queue.getJobs([JobStates.Completed, JobStates.Failed]);
+
+    let max = 0;
+    let min = Infinity;
+    let sum = 0;
+
+    jobs.forEach(async (job) => {
+      let pt = 0;
+
+      if (job.finishedOn && job.processedOn) {
+        pt = job.finishedOn - job.processedOn;
+      }
+
+      if (pt > max) max = pt;
+      if (pt < min) min = pt;
+
+      sum += pt;
+    });
+
+    const avg = sum / jobs.length;
+
+    return {
+      min,
+      max,
+      avg,
+    };
+  }
+
+  /**
    * Get list of all queues with counts and pause state
    * @returns an array of queues
    */
@@ -119,24 +154,21 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
    */
   async getQueueInfo(name: string) {
     await this.getQueue(name);
-    const [paused,totalCount,counts] = await Promise.all([
+    const [paused, totalCount, counts, processTimes] = await Promise.all([
       this.isQueuePause(name),
-      // TODO: we can get totalCount from getQueueJobCounts 
-      // this way we remove a redis lookup 
+      // TODO: we can get totalCount from getQueueJobCounts
+      // this way we remove a redis lookup
       this.getQueueTotalJobCounts(name),
-      this.getQueueJobCounts(name)
-    ])
+      this.getQueueJobCounts(name),
+      this.getQueueProcessTimes(name),
+    ]);
 
     return {
       name,
       paused,
       totalCount,
       counts,
-      processTimes: {
-        min: 0,
-        max: 0,
-        median: 0,
-      },
+      processTimes,
     };
   }
 
@@ -200,7 +232,7 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
     const end = pageSize * page;
     const start = end - pageSize;
 
-    return queue.getJobs([type], start, end);
+    return queue.getJobs([type], start, end - 1);
   }
 
   /**

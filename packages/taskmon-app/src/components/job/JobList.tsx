@@ -8,29 +8,21 @@ import {
 // import useReq from "use-req";
 import { JobListPagination } from "./JobListPagination";
 import { Button, Progress, Table, Tooltip } from "../base";
-import { Job } from "../../types";
+import { Job, JobStatus } from "../../types";
 import client from "../../client";
 import Utils from "../../utils";
 import usePagination from "../../hooks/usePagination";
 import { JobDetail } from "./JobDetail";
+import { useJobs } from "../../hooks/useJobs";
 
 type JobListProps = {
   queueName: string;
-  // TODO: use JobStatus enum
-  status: string;
+  status?: JobStatus;
+  count?: number;
 };
 
-export function JobList({ status, queueName }: JobListProps) {
-  const { page, pageSize } = usePagination();
-
-  // const {
-  //   run: fetchJobs,
-  //   loading,
-  //   data,
-  // } = useReq(client.job.list, {
-  //   deps: [queueName, status, page, pageSize],
-  //   immediate: false,
-  // });
+export function JobList({ status, queueName, count }: JobListProps) {
+  const { isFetching, data } = useJobs(queueName, status);
 
   const columns = useMemo(
     () => [
@@ -52,6 +44,10 @@ export function JobList({ status, queueName }: JobListProps) {
       {
         Header: "Progress",
         accessor: (row: Job) => <Progress percent={row.progress} />,
+      },
+      {
+        Header: "Attempts",
+        accessor: (row: Job) => row.attemptsMade,
       },
       {
         Header: "Added At",
@@ -104,32 +100,19 @@ export function JobList({ status, queueName }: JobListProps) {
     []
   );
 
-  // const rows = useMemo(() => data?.jobs || [], [data]);
-
-  // useEffect(() => {
-  //   if (status) {
-  //     const query = {
-  //       page,
-  //       pageSize,
-  //       type: status,
-  //     };
-  //     fetchJobs(queueName, query);
-  //   }
-  // }, [fetchJobs]);
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="mt-4">
       <Table<Job>
-        data={[]}
+        data={data || []}
         columns={columns}
         renderRowSubComponent={(row) => <JobDetail job={row.original} />}
       />
       {/* TODO: use react-table pagination */}
-      <JobListPagination />
+      <JobListPagination totalCount={count} />
     </div>
   );
 }
