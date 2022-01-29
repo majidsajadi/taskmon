@@ -59,7 +59,7 @@ export type QueueListResponse = {
 };
 
 export type WorkerListResponse = {
-  workers: Record<string, string>[];
+  workers: Record<JobStatus, string>[];
 };
 
 export type ListJobsResponse = {

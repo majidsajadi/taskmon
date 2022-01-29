@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { JobStatus } from "./types";
 dayjs.extend(relativeTime);
 
 export default class Utils {
@@ -47,5 +48,24 @@ export default class Utils {
   static capitalize(str: string): string {
     const arr = [...str];
     return arr[0].toUpperCase() + arr.slice(1).join("").toLowerCase();
+  }
+
+  static getStateColor(state: JobStatus): string {
+    switch (state) {
+      case JobStatus.ACTIVE:
+        return "blue";
+      case JobStatus.FAILED:
+        return "red";
+      case JobStatus.COMPLETED:
+        return "green";
+      case JobStatus.WAITING:
+        return "cyan";
+      case JobStatus.DELAYED:
+        return "purple";
+      case JobStatus.PAUSED:
+        return "orange";
+      default:
+        return "";
+    }
   }
 }

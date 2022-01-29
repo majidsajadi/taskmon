@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FiPause, FiPlay, FiRefreshCw } from "react-icons/fi";
 import classNames from "classnames";
-import { Button, Loading } from "../base";
+import { Button, Loading, Tooltip } from "../base";
 import { JobList } from "../job/JobList";
 import { JobStatus } from "../../types";
 import { QueueInfo } from "./QueueInfo";
@@ -11,7 +11,7 @@ import { useQueryClient } from "react-query";
 
 export function Queue() {
   const params = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
 
@@ -42,8 +42,8 @@ export function Queue() {
   }, [currStatus]);
 
   const handleRefresh = () => {
-    queryClient.invalidateQueries("jobs")
-  }
+    queryClient.invalidateQueries("jobs");
+  };
   const getClassName = (active: boolean) =>
     classNames(
       "inline-block py-4 px-4 cursor-pointer font-medium text-center border-b-2 flex space-x-2 uppercase text-sm",
@@ -58,8 +58,8 @@ export function Queue() {
 
   if (!queue) {
     navigate("oh-no");
-    return <div></div>
-  };
+    return <div></div>;
+  }
 
   return (
     <div className="flex flex-col p-6 space-y-4">
@@ -92,7 +92,13 @@ export function Queue() {
             ))}
           </ul>
           <div className="mx-4">
-            <Button onClick={handleRefresh} type="link" icon={<FiRefreshCw />}/>
+            <Tooltip content="Refresh">
+              <Button
+                onClick={handleRefresh}
+                type="link"
+                icon={<FiRefreshCw />}
+              />
+            </Tooltip>
           </div>
         </div>
         <JobList queueName={queue?.name} status={currStatus} count={count} />

@@ -33,11 +33,11 @@ export function Table<T extends object = {}>({
 
   if (!data.length) {
     return (
-      <div className="flex flex-col items-center justify-center w-full space-y-4 h-96">
-        <div className="p-8 rounded-full bg-slate-100">
-          <FiInbox className="text-6xl" />
+      <div className="flex flex-col items-center justify-center w-full h-48 space-y-4">
+        <div className="p-6 rounded-full bg-slate-100">
+          <FiInbox className="text-3xl" />
         </div>
-        <span className="text-lg font-medium">No Data</span>
+        <span className="text-lg font-medium">No jobs found</span>
       </div>
     );
   }
