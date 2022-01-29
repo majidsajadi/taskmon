@@ -76,7 +76,7 @@ export function Queue() {
       </div>
       <QueueInfo queue={queue} />
       <div className="bg-white rounded">
-        <div className="border-b border-slate-100 flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-slate-100">
           <ul className="flex flex-wrap">
             {statusList.map((status) => (
               <li className="mr-2" key={status}>
@@ -91,7 +91,7 @@ export function Queue() {
               </li>
             ))}
           </ul>
-          <div>
+          <div className="mx-4">
             <Button onClick={handleRefresh} type="link" icon={<FiRefreshCw />}/>
           </div>
         </div>

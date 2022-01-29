@@ -10,6 +10,7 @@ export function Descriptions({ items }: DescriptionsProps) {
       {items.map((item, index) => (
         <li key={index} className="flex items-center justify-between">
           <div>{item.label}</div>
+          <div className="flex-1 mx-2 border-b-2 border-dotted"></div>
           <div className="font-medium">{item.content}</div>
         </li>
       ))}

@@ -1,16 +1,19 @@
 import React from "react";
 import { FiInbox } from "react-icons/fi";
 import { useTable, Column, useExpanded, Row } from "react-table";
+import { Loading } from ".";
 
 type TableProps<T extends object = {}> = {
   columns: ReadonlyArray<Column<T>>;
   data: readonly T[];
+  loading?: boolean;
   renderRowSubComponent: (row: Row<T>) => React.ReactNode;
 };
 
 export function Table<T extends object = {}>({
   columns,
   data,
+  loading,
   renderRowSubComponent,
 }: TableProps<T>) {
   const {
@@ -32,13 +35,21 @@ export function Table<T extends object = {}>({
     return (
       <div className="flex flex-col items-center justify-center w-full space-y-4 h-96">
         <div className="p-8 rounded-full bg-slate-100">
-        <FiInbox className="text-6xl" />
+          <FiInbox className="text-6xl" />
         </div>
         <span className="text-lg font-medium">No Data</span>
       </div>
-    )
+    );
   }
-  
+
+  if (loading) {
+    return (
+      <div className="h-48">
+        <Loading />
+      </div>
+    );
+  }
+
   return (
     <table {...getTableProps()} className="w-full min-w-full overflow-auto">
       <thead>

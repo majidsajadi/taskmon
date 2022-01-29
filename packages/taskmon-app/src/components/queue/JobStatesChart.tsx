@@ -16,6 +16,8 @@ export function JobStatesChart({ counts }: JobStatesChartProps) {
       : [];
   }, [counts]);
 
+  console.log(data)
+
   const legends = useMemo(() => {
     return data.map((item) => item.label);
   }, [data]);
