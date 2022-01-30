@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FiDelete, FiPause, FiPlay, FiRefreshCw, FiTrash2 } from "react-icons/fi";
+import { FiPause, FiPlay, FiRefreshCw, FiTrash2 } from "react-icons/fi";
 import classNames from "classnames";
 import { Button, Loading, Tooltip } from "../base";
 import { JobList } from "../job/JobList";
@@ -8,6 +8,8 @@ import { JobStatus } from "../../types";
 import { QueueInfo } from "./QueueInfo";
 import { useQueue } from "../../hooks/useQueue";
 import { useQueryClient } from "react-query";
+import { usePauseQueue } from "../../hooks/usePauseQueue";
+import { useDestroyQueue } from "../../hooks/useDestroyQueue";
 
 export function Queue() {
   const params = useParams();
@@ -19,6 +21,8 @@ export function Queue() {
   const queueName = params.queueName;
 
   const { data: queue, status } = useQueue(queueName);
+  const pauseQueue = usePauseQueue();
+  const destroyQueue = useDestroyQueue();
 
   const currStatus = useMemo((): JobStatus | undefined => {
     const status = searchParams.get("status") as JobStatus;
@@ -44,6 +48,20 @@ export function Queue() {
   const handleRefresh = () => {
     queryClient.invalidateQueries("jobs");
   };
+
+  const handlePause = () => {
+    if (queueName) {
+      pauseQueue.mutate(queueName);
+    }
+  };
+
+  const handleDestroy = () => {
+    if (queueName) {
+      destroyQueue.mutate(queueName);
+      navigate("/");
+    }
+  };
+
   const getClassName = (active: boolean) =>
     classNames(
       "inline-block py-4 px-4 cursor-pointer font-medium text-center border-b-2 flex space-x-2 uppercase text-sm",
@@ -66,12 +84,21 @@ export function Queue() {
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-bold">{queueName}</h3>
         <div className="flex space-x-2">
-          {queue?.paused ? (
-            <Button icon={<FiPlay className="text-lg" />}>Resume</Button>
-          ) : (
-            <Button icon={<FiPause className="text-lg" />}>Pause</Button>
-          )}
-          <Button icon={<FiTrash2 />} type="primary">Destroy</Button>
+          <Button
+            onClick={handlePause}
+            icon={
+              queue?.paused ? (
+                <FiPlay className="text-lg" />
+              ) : (
+                <FiPause className="text-lg" />
+              )
+            }
+          >
+            {queue?.paused ? "Resume" : "Pause"}
+          </Button>
+          <Button type="danger" onClick={handleDestroy} icon={<FiTrash2 />}>
+            Destroy
+          </Button>
           <Button type="primary">New Job</Button>
         </div>
       </div>
