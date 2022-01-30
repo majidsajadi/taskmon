@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FiPause, FiPlay, FiRefreshCw } from "react-icons/fi";
+import { FiDelete, FiPause, FiPlay, FiRefreshCw, FiTrash2 } from "react-icons/fi";
 import classNames from "classnames";
 import { Button, Loading, Tooltip } from "../base";
 import { JobList } from "../job/JobList";
@@ -57,7 +57,7 @@ export function Queue() {
   }
 
   if (!queue) {
-    navigate("oh-no");
+    navigate("/oh-no");
     return <div></div>;
   }
 
@@ -67,15 +67,16 @@ export function Queue() {
         <h3 className="text-2xl font-bold">{queueName}</h3>
         <div className="flex space-x-2">
           {queue?.paused ? (
-            <Button icon={<FiPlay className="text-lg" />}>RESUME</Button>
+            <Button icon={<FiPlay className="text-lg" />}>Resume</Button>
           ) : (
-            <Button icon={<FiPause className="text-lg" />}>PAUSE</Button>
+            <Button icon={<FiPause className="text-lg" />}>Pause</Button>
           )}
-          <Button type="primary">NEW JOB</Button>
+          <Button icon={<FiTrash2 />} type="primary">Destroy</Button>
+          <Button type="primary">New Job</Button>
         </div>
       </div>
       <QueueInfo queue={queue} />
-      <div className="bg-white rounded">
+      <div className="bg-white rounded shadow">
         <div className="flex items-center justify-between border-b border-slate-100">
           <ul className="flex flex-wrap">
             {statusList.map((status) => (

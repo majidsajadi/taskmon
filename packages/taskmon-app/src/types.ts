@@ -52,6 +52,7 @@ export type QueueDetail = QueueInfo & {
   paused: boolean;
   counts: Record<string, number>;
   processTimes: ProcessTimes;
+  clientInfo: Record<string, any>;
 };
 
 export type QueueListResponse = {

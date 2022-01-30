@@ -3,7 +3,7 @@ import { QueueList } from "./queue/QueueList";
 
 export function Sidebar() {
   return (
-    <div className="flex flex-col justify-between h-full p-4 bg-white shadow-lg w-72">
+    <div className="flex flex-col justify-between h-full p-4 bg-white shadow w-72">
       <div className="flex-1">
         <div className="mb-6 text-center">
           <span className="px-2 py-1 text-xl font-bold tracking-wide rounded text-slate-900 w-fit">

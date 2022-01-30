@@ -1,8 +1,9 @@
 import { Job, Queue, JobsOptions } from "bullmq";
 import { RedisOptions } from "ioredis";
-import Messages from "../utils/message";
-import redis from "../redis";
 import { GetJobOption, Options, Provider, QueueInfo } from "./base";
+import Messages from "../utils/message";
+import parseRedisInfo from "../utils/redis-info";
+import redis from "../redis";
 
 // TODO: Move this to config
 const DEFAULT_PAGE_SIZE = 10;
@@ -59,6 +60,21 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
         this.queues[qn] = new Queue(qn, { connection: this.connection });
       }
     });
+  }
+
+  /**
+   * Get queue Redis client info
+   * We use queueName so in future we can support multiple connection
+   * For now the config only support a single Redis connection
+   * @param queueName queue name
+   */
+  async getRedisClientInfo(queueName: string) {
+    const queue = await this.getQueue(queueName);
+    const client = await queue.client;
+    const info = await client.info()
+    // TODO: pick desired properties
+    // TODO: conver to camelCase
+    return parseRedisInfo(info);
   }
 
   /**
@@ -154,13 +170,14 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
    */
   async getQueueInfo(name: string) {
     await this.getQueue(name);
-    const [paused, totalCount, counts, processTimes] = await Promise.all([
+    const [paused, totalCount, counts, processTimes, clientInfo] = await Promise.all([
       this.isQueuePause(name),
       // TODO: we can get totalCount from getQueueJobCounts
       // this way we remove a redis lookup
       this.getQueueTotalJobCounts(name),
       this.getQueueJobCounts(name),
       this.getQueueProcessTimes(name),
+      this.getRedisClientInfo(name)
     ]);
 
     return {
@@ -169,6 +186,7 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
       totalCount,
       counts,
       processTimes,
+      clientInfo,
     };
   }
 

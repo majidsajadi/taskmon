@@ -17,6 +17,7 @@ export type QueueInfo = {
   counts: Record<string, number>;
   totalCount: number; 
   processTimes: ProcessTimes;
+  clientInfo: Record<string, any>;
 }
 
 export type GetJobOption = {
@@ -36,6 +37,7 @@ export interface Provider<Queue = unknown, Job = any, JobsOptions = any> {
 
   getQueue(name: string): Promise<Queue>;
   initQueues(): Promise<void>;
+  getRedisClientInfo(queueName: string): Promise<Record<string, any>>;
   getQueueJobCounts(name: string): Promise<Record<string, number>>;
   isQueuePause(name: string): Promise<boolean>;
   getQueueProcessTimes(name: string): Promise<ProcessTimes>;
