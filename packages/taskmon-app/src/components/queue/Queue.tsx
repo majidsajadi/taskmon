@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FiPause, FiPlay, FiRefreshCw, FiTrash2 } from "react-icons/fi";
+import { toast } from "react-toastify";
 import classNames from "classnames";
 import { Button, Loading, Tooltip } from "../base";
 import { JobList } from "../job/JobList";
@@ -52,12 +53,14 @@ export function Queue() {
   const handlePause = () => {
     if (queueName) {
       pauseQueue.mutate(queueName);
+      toast(`Paused queue ${queueName}`);
     }
   };
 
   const handleDestroy = () => {
     if (queueName) {
       destroyQueue.mutate(queueName);
+      toast(`Destroyed queue ${queueName}`);
       navigate("/");
     }
   };

@@ -6,6 +6,7 @@ import App from "./components/App";
 
 import "tippy.js/dist/tippy.css";
 import "react-vis/dist/style.css";
+import "react-toastify/dist/ReactToastify.css";
 import "./assets/styles/main.css";
 
 const queryClient = new QueryClient({

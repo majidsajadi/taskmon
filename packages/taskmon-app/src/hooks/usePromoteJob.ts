@@ -11,6 +11,7 @@ export function usePromoteJob() {
       onSuccess: () => {
         // TODO: update the queue info manually (maybe?)
         queryClient.invalidateQueries("jobs");
+        queryClient.invalidateQueries("queue");
       },
     }
   );

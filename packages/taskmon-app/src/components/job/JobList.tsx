@@ -1,10 +1,12 @@
 import { useMemo } from "react";
 import {
+  FiCornerUpRight,
   FiMinusSquare,
   FiPlusSquare,
   FiRepeat,
   FiTrash2,
 } from "react-icons/fi";
+import { toast } from "react-toastify";
 import { JobListPagination } from "./JobListPagination";
 import { Button, Progress, Table, Tooltip } from "../base";
 import { Job, JobStatus } from "../../types";
@@ -29,14 +31,17 @@ export function JobList({ status, queueName, count }: JobListProps) {
 
   const handlePromoteJob = (jobId: string) => {
     promoteJob.mutate({ queueName, jobId });
+    toast(`Promoted job ${jobId}`);
   };
 
   const handleDeleteJob = (jobId: string) => {
     deleteJob.mutate({ queueName, jobId });
+    toast(`Deleted job ${jobId}`);
   };
 
   const handleRetryJob = (jobId: string) => {
     retryJob.mutate({ queueName, jobId });
+    toast(`Retried job ${jobId}`);
   };
 
   const columns = useMemo(
@@ -102,7 +107,7 @@ export function JobList({ status, queueName, count }: JobListProps) {
               />
             </Tooltip>
             {status === JobStatus.FAILED && (
-              <Tooltip content="Retry Job">
+              <Tooltip content="Retry Failed Job">
                 <Button
                   className="align-sub"
                   type="link"
@@ -112,14 +117,14 @@ export function JobList({ status, queueName, count }: JobListProps) {
                 />
               </Tooltip>
             )}
-            {status === JobStatus.FAILED && (
-              <Tooltip content="Retry Job">
+            {status === JobStatus.DELAYED && (
+              <Tooltip content="Promote Delayed Job">
                 <Button
                   className="align-sub"
                   type="link"
                   size="small"
                   onClick={() => handlePromoteJob(row.id)}
-                  icon={<FiRepeat className="text-lg text-teal-600" />}
+                  icon={<FiCornerUpRight className="text-lg text-teal-600" />}
                 />
               </Tooltip>
             )}

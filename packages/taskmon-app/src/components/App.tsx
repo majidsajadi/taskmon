@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
 import { Queue } from "./queue/Queue";
 import { Layout } from "./Layout";
 import { NoMatch } from "./NoMatch";
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/oh-no" element={<Error />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
+      <ToastContainer />
     </div>
   );
 }
