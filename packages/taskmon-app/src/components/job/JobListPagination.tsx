@@ -9,7 +9,7 @@ type JobListPaginationProps = {
 export function JobListPagination({ totalCount = 0 }: JobListPaginationProps) {
   const { page, pageSize, next, prev } = usePagination(totalCount);
 
-  const from = totalCount > 0 ? (page * pageSize) - pageSize : 0;
+  const from = totalCount > 0 ? page * pageSize - pageSize + 1 : 0;
   const to = page * pageSize > totalCount ? totalCount : page * pageSize;
   const isFirstPage = page <= 1;
   const isLastPage = page * pageSize >= totalCount;
