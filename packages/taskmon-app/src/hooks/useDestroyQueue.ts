@@ -11,6 +11,7 @@ export function useDestroyQueue() {
       onSuccess: () => {
         // TODO: update the queue info manually (maybe?)
         queryClient.invalidateQueries("queues");
+        queryClient.invalidateQueries("queue");
       },
     }
   );

@@ -11,9 +11,9 @@ export function Progress({ percent }: ProgressProps) {
 
   return (
     <div className="flex items-center space-x-2">
-      <div className="w-full h-3 rounded bg-slate-100">
+      <div className="w-full h-3 rounded-md bg-gray-100">
         <div
-          className="h-full bg-teal-600 rounded"
+          className="h-full bg-teal-600 rounded-md"
           style={{
             width: `${calculated}%`,
           }}

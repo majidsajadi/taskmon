@@ -28,7 +28,7 @@ export function ProcessTimeChart({ processTimes }: ProcessTimeChartProps) {
           <HorizontalGridLines />
           <XAxis />
           <YAxis tickSize={0} tickFormat={(x) => x} />
-          <VerticalBarSeries barWidth={0.5} data={data} />
+          <VerticalBarSeries color="#0d9488" barWidth={0.5} data={data} />
         </FlexibleWidthXYPlot>
       </div>
     </Card>

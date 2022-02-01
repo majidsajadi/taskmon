@@ -53,17 +53,17 @@ export default class Utils {
   static getStateColor(state: JobStatus): string {
     switch (state) {
       case JobStatus.ACTIVE:
-        return "blue";
+        return "#0ea5e9";
       case JobStatus.FAILED:
-        return "red";
+        return "#ef4444";
       case JobStatus.COMPLETED:
-        return "green";
+        return "#14b8a6";
       case JobStatus.WAITING:
-        return "cyan";
+        return "#6366f1";
       case JobStatus.DELAYED:
-        return "purple";
+        return "#fde047";
       case JobStatus.PAUSED:
-        return "orange";
+        return "#f97316";
       default:
         return "";
     }

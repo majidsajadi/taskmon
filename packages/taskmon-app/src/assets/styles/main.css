@@ -8,6 +8,6 @@
 
 body {
   @apply antialiased;
-  @apply text-slate-600;
+  @apply text-gray-700;
   @apply text-base;
 }

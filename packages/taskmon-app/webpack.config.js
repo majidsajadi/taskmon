@@ -1,7 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const tailwindcss = require("tailwindcss");
 const autoprefixer = require("autoprefixer");
@@ -82,7 +81,6 @@ module.exports = (_, { mode }) => {
         inject: true,
         hash: true,
       }),
-      new NodePolyfillPlugin(),
       new webpack.DefinePlugin({
         // env
       }),

@@ -12,8 +12,8 @@ export function Tabs({ items }: TabsProps) {
         <Tab
           className={({ selected }) =>
             classNames(
-              "flex-grow mb-2 text-center rounded",
-              selected ? "bg-teal-600 text-white" : "bg-slate-100"
+              "flex-grow mb-2 text-center rounded-md",
+              selected ? "bg-teal-600 text-white" : "bg-gray-100"
             )
           }
         >

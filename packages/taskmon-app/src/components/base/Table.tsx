@@ -71,7 +71,7 @@ export function Table<T extends object = {}>({
           prepareRow(row);
           return (
             <React.Fragment key={row.getRowProps().key}>
-              <tr className="border-t">
+              <tr className="odd:bg-gray-50">
                 {row.cells.map((cell) => {
                   return (
                     <td

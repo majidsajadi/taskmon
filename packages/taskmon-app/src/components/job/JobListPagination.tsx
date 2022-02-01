@@ -19,10 +19,10 @@ export function JobListPagination({ totalCount = 0 }: JobListPaginationProps) {
       <div className="flex items-center">
         <span className="mr-3">
           From{" "}
-          <span className="font-semibold">
+          <span className="font-bold">
             {from} to {to}
           </span>{" "}
-          of total <span className="font-semibold">{totalCount}</span>
+          of total <span className="font-bold">{totalCount}</span>
         </span>
         <Button
           onClick={prev}
