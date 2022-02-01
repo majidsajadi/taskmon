@@ -214,6 +214,7 @@ class BullMQProvider implements Provider<Queue, Job, JobsOptions> {
   async destroyQueue(name: string) {
     const queue = await this.getQueue(name);
     await queue.obliterate();
+    await this.initQueues();
   }
 
   /**
