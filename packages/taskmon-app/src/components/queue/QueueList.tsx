@@ -20,8 +20,8 @@ export function QueueList() {
 
   const getQueueItemCLS = (match: boolean) =>
     classNames(
-      "hover:bg-gray-100 w-full rounded-md px-2 py-1 block truncate flex justify-between items-center",
-      match && "bg-gray-100"
+      "hover:bg-teal-600 hover:text-white w-full rounded-md p-2 block truncate font-medium flex justify-between items-center",
+      match && "bg-teal-600 text-white"
     );
 
   const renderQueueItem = (queue: QueueInfo) => {
@@ -32,7 +32,7 @@ export function QueueList() {
       <li key={queue.name}>
         <Link to={to} className={getQueueItemCLS(!!match)}>
           <span>{queue.name}</span>
-          <span className="px-2 py-1 text-teal-600 rounded-md bg-gray-50">
+          <span >
             {queue.totalCount}
           </span>
         </Link>

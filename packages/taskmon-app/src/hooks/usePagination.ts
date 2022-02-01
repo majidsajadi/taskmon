@@ -8,7 +8,7 @@ type UsePaginationReturn = {
   prev: () => void;
 };
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 5;
 
 export default function (totalCount = 0): UsePaginationReturn {
   const [searchParams, setSearchParams] = useSearchParams();

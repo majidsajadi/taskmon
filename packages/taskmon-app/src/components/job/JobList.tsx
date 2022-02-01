@@ -132,7 +132,7 @@ export function JobList({ status, queueName, count }: JobListProps) {
         ),
       },
     ],
-    []
+    [status]
   );
 
   return (
