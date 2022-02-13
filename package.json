@@ -10,6 +10,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "dev": "lerna run --parallel dev",
-    "build": "lerna run --parallel build"
+    "build": "lerna run --parallel build",
+    "start": "yarn run build & lerna run --scope taskmon-server start"
   }
 }
