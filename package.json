@@ -1,0 +1,15 @@
+{
+  "name": "taskmon",
+  "private": true,
+  "version": "0.0.1",
+  "author": "Majid Sajadi <majidsajadi93@gmail.com> (https://github.com/majidsajadi)",
+  "license": "MIT",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "dev": "lerna run --parallel dev",
+    "build": "lerna run --parallel build"
+  }
+}

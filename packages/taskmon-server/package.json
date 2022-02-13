@@ -1,12 +1,11 @@
 {
-  "name": "job-manager",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "name": "taskmon-server",
+  "private": true,
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc",
-    "start": "node build/server.js",
-    "watch": "concurrently \"tsc -w\" \"nodemon build/server.js\""
+    "start": "node dist/server.js",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\""
   },
   "devDependencies": {
     "@types/bull": "^3.15.7",

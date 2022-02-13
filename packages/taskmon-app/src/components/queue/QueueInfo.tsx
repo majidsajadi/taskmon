@@ -1,7 +1,7 @@
 import { JobStatesChart } from "./JobStatesChart";
 import { ProcessTimeChart } from "./ProcessTimeChart";
 import { RedisClientInfo } from "./RedisClientInfo";
-import { QueueDetail, QueueInfo } from "../../types";
+import { QueueDetail } from "../../types";
 
 type QueueInfoProps = {
   queue: QueueDetail;
