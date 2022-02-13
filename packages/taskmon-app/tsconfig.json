@@ -1,19 +1,21 @@
 {
   "compilerOptions": {
-    "outDir": "build",
-    "noImplicitAny": true,
-    "module": "esnext",
-    "target": "es2017", // TODO: check this. we changed it from es6 to es2017 because of Object.entries
-    "jsx": "react-jsx",
-    "allowJs": true,
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": false,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "noFallthroughCasesInSwitch": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true
-  }
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }
